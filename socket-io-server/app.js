@@ -24,7 +24,7 @@ const getApiAndEmit = async socket => {
         //socket.emit("FromAPI", res.data.currently.temperature); // Emitting a new message. It will be consumed by the client
 
         contador += 1;
-        socket.emit("FromAPI", 'quente: '+contador); // Emitting a new message. It will be consumed by the client
+        socket.emit("FromAPI", 'quente = '+contador); // Emitting a new message. It will be consumed by the client
     } catch (error) {
         console.error(`Error: ${error.code}`);
     }
