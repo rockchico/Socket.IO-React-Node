@@ -11,13 +11,20 @@ app.use(index);
 
 const server = http.createServer(app);
 const io = socketIo(server); // < Interesting!
+
+
+var contador = 0;
+
 const getApiAndEmit = async socket => {
     try {
-        const API_KEY = "224eacfae4c44e6ee3a4196254942472"
-        const res = await axios.get(
-            "https://api.darksky.net/forecast/"+API_KEY+"/43.7695,11.2558"
-        ); // Getting the data from DarkSky
-        socket.emit("FromAPI", res.data.currently.temperature); // Emitting a new message. It will be consumed by the client
+        //const API_KEY = "224eacfae4c44e6ee3a4196254942472"
+        //const res = await axios.get(
+        //    "https://api.darksky.net/forecast/"+API_KEY+"/43.7695,11.2558"
+        //); // Getting the data from DarkSky
+        //socket.emit("FromAPI", res.data.currently.temperature); // Emitting a new message. It will be consumed by the client
+
+        contador += 1;
+        socket.emit("FromAPI", 'quente: '+contador); // Emitting a new message. It will be consumed by the client
     } catch (error) {
         console.error(`Error: ${error.code}`);
     }
