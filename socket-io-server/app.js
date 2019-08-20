@@ -31,10 +31,17 @@ const getApiAndEmit = async socket => {
 };
 
 io.on("connection", socket => {
-    console.log("New client connected"), setInterval(
-        () => getApiAndEmit(socket),
-        10000
-    );
+    
+    console.log("New client connected")
+
+    // manda a mensagem para todos os clientes
+    socket.on('chat message', function(msg){
+        console.log("nova msg = "+msg)
+        io.emit('chat message', msg);
+    });
+
+
+
     socket.on("disconnect", () => console.log("Client disconnected"));
 });
 
