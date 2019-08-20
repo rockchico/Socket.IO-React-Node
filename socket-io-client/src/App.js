@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
 
 const endpoint = "http://127.0.0.1:4001";
-const socket = socketIOClient(endpoint);
+
 
 class App extends Component {
   constructor() {
@@ -15,11 +15,23 @@ class App extends Component {
   }
   componentDidMount() {
 
+    const socket = socketIOClient(endpoint);
     const { messages } = this.state;
     
-    socket.on("chat message", data => messages.push(data));
+    socket.on("FromAPI-Message", data => {
 
-    this.setState({messages: messages});
+      messages.push(data)
+
+      this.setState({messages: messages});
+
+    });
+
+    
+
+
+    //const { endpoint } = this.state;
+    
+    socket.on("FromAPI", data => this.setState({ response: data }));
 
   }
 
@@ -30,12 +42,13 @@ class App extends Component {
 
   _handleSubmit = (event) => {
     
+    const socket = socketIOClient(endpoint);
     
     const { messageInput } = this.state;
   
     console.log(messageInput)
 
-    socket.emit('chat message', messageInput);
+    socket.emit('FromClient-Message', messageInput);
       
     this.setState({messageInput: ''});
 
@@ -50,6 +63,8 @@ class App extends Component {
 
     const { messages } = this.state;
 
+    const { response } = this.state;
+
     
 
     console.log(messages)
@@ -57,6 +72,15 @@ class App extends Component {
 
     return (
         <div style={{ textAlign: "center" }}>
+
+          <div>
+            {response
+                ? <p>
+                  The temperature in Florence is: {response} °F
+                </p>
+                : <p>Loading...</p>}
+          </div>
+
           <ul id="messages">
             {messages.map((m, i) => (
 
@@ -64,6 +88,9 @@ class App extends Component {
           
             ))}
           </ul>
+
+
+          
           <form onSubmit={this._handleSubmit}>
             <input id="m" autoComplete="off" value={messageInput} onChange={this._handleChange} /><button>Send</button>
           </form>

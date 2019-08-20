@@ -14,6 +14,7 @@ const io = socketIo(server); // < Interesting!
 
 
 var contador = 0;
+let interval;
 
 const getApiAndEmit = async socket => {
     try {
@@ -30,15 +31,40 @@ const getApiAndEmit = async socket => {
     }
 };
 
+const getApiAndEmitMessage = async socket => {
+    try {
+        //const API_KEY = "224eacfae4c44e6ee3a4196254942472"
+        //const res = await axios.get(
+        //    "https://api.darksky.net/forecast/"+API_KEY+"/43.7695,11.2558"
+        //); // Getting the data from DarkSky
+        //socket.emit("FromAPI", res.data.currently.temperature); // Emitting a new message. It will be consumed by the client
+
+        
+        //socket.emit("FromAPI", 'quente = '+contador); // Emitting a new message. It will be consumed by the client
+        // manda a mensagem para todos os clientes
+        socket.on('FromClient-Message', function(msg){
+            
+            contador += 1;
+            
+            console.log("nova msg ("+contador+") = "+msg)
+            io.emit('FromAPI-Message', "("+contador+") "+msg);
+        });
+    } catch (error) {
+        console.error(`Error: ${error.code}`);
+    }
+};
+
 io.on("connection", socket => {
     
-    console.log("New client connected")
+    console.log("New client connected");
+    if (interval) {
+        clearInterval(interval);
+    }
+    //interval = setInterval(() => getApiAndEmit(socket), 10000);
 
-    // manda a mensagem para todos os clientes
-    socket.on('chat message', function(msg){
-        console.log("nova msg = "+msg)
-        io.emit('chat message', msg);
-    });
+    getApiAndEmitMessage(socket);
+
+    
 
 
 
