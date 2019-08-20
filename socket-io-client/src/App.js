@@ -52,7 +52,7 @@ class App extends Component {
       
     this.setState({messageInput: ''});
 
-    event.preventDefault(); // prevents page reloading  
+    event.preventDefault(); // prevents page reloading    
   }
 
 
