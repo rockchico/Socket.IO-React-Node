@@ -52,15 +52,32 @@ const apiFileStreamSend = async socket => {
     try {
         
         var filename = 'img'+imgNumber+'.jpg';
+        const stats = fs.statSync(filename);
+        console.log(stats)
+
+        const fileSizeInBytes = stats.size;
+
+        var stream = ss.createStream();
+
+        ss(socket).emit('FromAPI-image', stream, {name: filename, size: fileSizeInBytes});
+        fs.createReadStream(filename).pipe(stream);
         
+        /* 
         fs.readFile(filename, function(err, data){
             //socket.emit('imageConversionByClient', { image: true, buffer: data });
             //socket.emit('imageConversionByServer', "data:image/png;base64,"+ data.toString("base64"));
 
             var stream = ss.createStream();
+
+            
+
             ss(socket).emit('FromAPI-image', stream, {name: filename, buffer: data.toString("base64")});
             fs.createReadStream(filename).pipe(stream);
+
+            console.log(stream)
+            
         });
+        */
 
         imgNumber++ 
 
@@ -85,10 +102,12 @@ io.on("connection", socket => {
     
     interval = setInterval(() => {
         getApiAndEmit(socket)
-        apiFileStreamSend(socket)
+        
     }, 1000);
 
     apiFileStream(socket)
+
+    apiFileStreamSend(socket)
 
     
 

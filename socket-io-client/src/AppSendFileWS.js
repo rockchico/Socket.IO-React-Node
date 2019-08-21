@@ -22,17 +22,51 @@ class AppSendFileWS extends Component {
     socket.on("FromAPI", data => this.setState({ response: data }));
 
     let self = this;
+    
+
     socketIOStream(socket).on('FromAPI-image', function(stream, data) {
 
+      let fileLength = 0;
+      let fileBuffer = [];
+
       console.log("opa");
-      console.log(data.buffer);
-      console.log(stream);
+      //console.log(data.buffer);
+      //console.log(stream);
+
+      //== Receive data
+      stream.on('data', function (chunk) {
+          fileLength += chunk.length;
+          let progress = Math.floor(fileLength / data.size * 100) + '%'
+          //progress = Math.max(progress - 2, 1);
+          fileBuffer.push(chunk);
+
+          console.log(progress);
+      });
+
+      stream.on('end', function () {
+
+        let filedata = new Uint8Array(fileLength);
+        let i = 0;
+
+        //== Loop to fill the final array
+        fileBuffer.forEach(function (buff) {
+            for (var j = 0; j < buff.length; j++) {
+                filedata[i] = buff[j];
+                i++;
+            }
+        });
+
+        let img = <img alt={"teste"} src={"data:image/png;base64,"+self.b64(filedata)}></img>
+
+        self.setState({ imageFromAPI: img })
+
+        //console.log(filedata);
+
+    });
 
 
-      //let img = <img alt={"teste"} src={"data:image/png;base64,"+self.b64(data.buffer)}></img>
-      let img = <img alt={"teste"} src={"data:image/png;base64,"+data.buffer}></img>
 
-      self.setState({ imageFromAPI: img })
+      
 
       //var filename = path.basename(data.name);
       //stream.pipe(fs.createWriteStream(filename));
