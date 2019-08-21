@@ -33,6 +33,14 @@ class App extends Component {
     
     socket.on("FromAPI", data => this.setState({ response: data }));
 
+
+    // Sending and getting data (acknowledgements)
+    socket.on('connect', function () { // TIP: you can avoid listening on `connect` and listen on events directly too!
+      socket.emit('ferret', 'tobi', 'woot', function (data) { // args are sent in order to acknowledgement function
+        console.log(data); // data will be 'tobi says woot'
+      });
+    });
+
   }
 
   _handleChange = (event) => {
