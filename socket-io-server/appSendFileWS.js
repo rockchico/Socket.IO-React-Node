@@ -63,23 +63,7 @@ const apiFileStreamSend = async socket => {
 
         // lê o arquivo e manda pelo stream
         fs.createReadStream(filename).pipe(stream);
-        
-        /* 
-        fs.readFile(filename, function(err, data){
-            //socket.emit('imageConversionByClient', { image: true, buffer: data });
-            //socket.emit('imageConversionByServer', "data:image/png;base64,"+ data.toString("base64"));
 
-            var stream = ss.createStream();
-
-            
-
-            ss(socket).emit('FromAPI-image', stream, {name: filename, buffer: data.toString("base64")});
-            fs.createReadStream(filename).pipe(stream);
-
-            console.log(stream)
-            
-        });
-        */
 
         imgNumber++ 
 
