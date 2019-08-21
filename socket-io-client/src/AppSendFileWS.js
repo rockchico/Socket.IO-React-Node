@@ -9,7 +9,8 @@ class AppSendFileWS extends Component {
   constructor() {
     super();
     this.state = {
-      response: false
+      response: false,
+      uploadStatus: false
     };
   }
 
@@ -23,12 +24,24 @@ class AppSendFileWS extends Component {
     
     console.log(event.target.files)
 
-    var file = event.target.files[0];
-    var stream = socketIOStream.createStream();
+    let file = event.target.files[0];
+    let stream = socketIOStream.createStream();
  
     // upload a file to the server.
     socketIOStream(socket).emit('profile-image', stream, {size: file.size, name: file.name});
-    socketIOStream.createBlobReadStream(file).pipe(stream);
+    let blobStream = socketIOStream.createBlobReadStream(file);
+    let size = 0;
+
+    let self = this;
+    blobStream.on('data', function(chunk) {
+      size += chunk.length;
+      let uploadStatus = Math.floor(size / file.size * 100) + '%'
+      console.log(uploadStatus);
+      self.setState({ uploadStatus: uploadStatus })
+      // -> e.g. '42%'
+    });
+
+    blobStream.pipe(stream)
     
   }
 
@@ -36,6 +49,7 @@ class AppSendFileWS extends Component {
   render() {
 
     const { response } = this.state;
+    const { uploadStatus } = this.state;
 
     return (
         <div style={{ textAlign: "center" }}>
@@ -46,6 +60,12 @@ class AppSendFileWS extends Component {
                   The temperature in Florence is: {response} °F
                 </p>
                 : <p>Loading...</p>}
+
+            {response
+                ? <p>
+                  upload: {uploadStatus}
+                </p>
+                : <p>upload %</p>}
 
               <input type="file" onChange={this._handleChange}/>
           </div>
