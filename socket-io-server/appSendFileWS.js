@@ -47,6 +47,27 @@ const apiFileStream = async socket => {
     }
 };
 
+const apiFileStreamSend = async socket => {
+    try {
+        
+        var filename = 'Arvore.JPG';
+        
+        fs.readFile(filename, function(err, data){
+            //socket.emit('imageConversionByClient', { image: true, buffer: data });
+            //socket.emit('imageConversionByServer', "data:image/png;base64,"+ data.toString("base64"));
+
+            var stream = ss.createStream();
+            ss(socket).emit('FromAPI-image', stream, {name: filename, buffer: data.toString("base64")});
+            fs.createReadStream(filename).pipe(stream);
+        });
+       
+        
+
+    } catch (error) {
+        console.error(`Error: ${error.code}`);
+    }
+};
+
 
 
 
@@ -61,6 +82,8 @@ io.on("connection", socket => {
     interval = setInterval(() => getApiAndEmit(socket), 1000);
 
     apiFileStream(socket)
+
+    apiFileStreamSend(socket)
 
  
     socket.on("disconnect", () => console.log("Client disconnected"));

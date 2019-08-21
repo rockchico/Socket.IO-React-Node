@@ -10,13 +10,35 @@ class AppSendFileWS extends Component {
     super();
     this.state = {
       response: false,
-      uploadStatus: false
+      uploadStatus: false,
+      imageFromAPI: false
     };
   }
+
+  b64(e){var t="";var n=new Uint8Array(e);var r=n.byteLength;for(var i=0;i<r;i++){t+=String.fromCharCode(n[i])}return window.btoa(t)}
 
   componentDidMount() {
     const socket = socketIOClient(endpoint);
     socket.on("FromAPI", data => this.setState({ response: data }));
+
+    let self = this;
+    socketIOStream(socket).on('FromAPI-image', function(stream, data) {
+
+      console.log("opa");
+      console.log(data.buffer);
+      console.log(stream);
+
+
+      //let img = <img alt={"teste"} src={"data:image/png;base64,"+self.b64(data.buffer)}></img>
+      let img = <img alt={"teste"} src={"data:image/png;base64,"+data.buffer}></img>
+
+      self.setState({ imageFromAPI: img })
+
+      //var filename = path.basename(data.name);
+      //stream.pipe(fs.createWriteStream(filename));
+  });
+
+
   }
 
   _handleChange = (event) => {
@@ -50,6 +72,7 @@ class AppSendFileWS extends Component {
 
     const { response } = this.state;
     const { uploadStatus } = this.state;
+    const { imageFromAPI } = this.state;
 
     return (
         <div style={{ textAlign: "center" }}>
@@ -61,11 +84,18 @@ class AppSendFileWS extends Component {
                 </p>
                 : <p>Loading...</p>}
 
-            {response
+            {uploadStatus
                 ? <p>
                   upload: {uploadStatus}
                 </p>
                 : <p>upload %</p>}
+
+
+            {imageFromAPI
+                ? <p>
+                  {imageFromAPI}
+                </p>
+                : <p>imagem da API</p>}
 
               <input type="file" onChange={this._handleChange}/>
           </div>
