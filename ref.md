@@ -11,3 +11,7 @@ git push -u origin master
 
 - instalei nodemon no server
 npm install -g nodemon
+
+
+# Enviar arquivos streaming
+https://www.npmjs.com/package/socket.io-stream

@@ -4,7 +4,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
-import App from './App';
+//import App from './App';
+import App from './AppSendFileWS';
 
 
 import * as serviceWorker from './serviceWorker';
