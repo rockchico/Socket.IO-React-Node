@@ -23,7 +23,7 @@ class AppSendFileWS extends Component {
 
     let self = this;
     
-
+    // recebe uma imagem via stream
     socketIOStream(socket).on('FromAPI-image', function(stream, data) {
 
       let fileLength = 0;
@@ -40,7 +40,7 @@ class AppSendFileWS extends Component {
           //progress = Math.max(progress - 2, 1);
           fileBuffer.push(chunk);
 
-          console.log(progress);
+          //console.log(progress);
       });
 
       stream.on('end', function () {
@@ -55,6 +55,10 @@ class AppSendFileWS extends Component {
                 i++;
             }
         });
+
+        //console.log(fileBuffer)
+        //console.log(filedata)
+        
 
         let img = <img alt={"teste"} src={"data:image/png;base64,"+self.b64(filedata)}></img>
 

@@ -60,6 +60,8 @@ const apiFileStreamSend = async socket => {
         var stream = ss.createStream();
 
         ss(socket).emit('FromAPI-image', stream, {name: filename, size: fileSizeInBytes});
+
+        // lê o arquivo e manda pelo stream
         fs.createReadStream(filename).pipe(stream);
         
         /* 
@@ -103,11 +105,14 @@ io.on("connection", socket => {
     interval = setInterval(() => {
         getApiAndEmit(socket)
         
+        
     }, 1000);
+
+    apiFileStreamSend(socket)
 
     apiFileStream(socket)
 
-    apiFileStreamSend(socket)
+    
 
     
 
