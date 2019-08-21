@@ -32,11 +32,11 @@ const getApiAndEmit = async socket => {
 const apiFileStream = async socket => {
     try {
         
-        ss(socket).on('profile-image', function(stream, data) {
+        ss(socket).on('FromClient-image', function(stream, data) {
 
-            console.log("opa");
-            console.log(data);
-            console.log(stream);
+            //console.log("opa");
+            //console.log(data);
+            //console.log(stream);
 
             var filename = path.basename(data.name);
             stream.pipe(fs.createWriteStream(filename));
@@ -53,7 +53,7 @@ const apiFileStreamSend = async socket => {
         
         var filename = 'img'+imgNumber+'.jpg';
         const stats = fs.statSync(filename);
-        console.log(stats)
+        //console.log(stats)
 
         const fileSizeInBytes = stats.size;
 
@@ -65,9 +65,9 @@ const apiFileStreamSend = async socket => {
         fs.createReadStream(filename).pipe(stream);
 
 
-        imgNumber++ 
+        //imgNumber++ 
 
-        if(imgNumber > 3) { imgNumber = 1}
+        //if(imgNumber > 3) { imgNumber = 1}
 
 
     } catch (error) {
@@ -82,17 +82,18 @@ io.on("connection", socket => {
     
     console.log("New client connected");
 
-    if (interval) {
-        clearInterval(interval);
-    }
+    //if (interval) {
+    //    clearInterval(interval);
+    //}
     
     interval = setInterval(() => {
         getApiAndEmit(socket)
+        apiFileStreamSend(socket)
         
         
-    }, 1000);
+    }, 5000);
 
-    apiFileStreamSend(socket)
+    
 
     apiFileStream(socket)
 
@@ -101,7 +102,9 @@ io.on("connection", socket => {
     
 
  
-    socket.on("disconnect", () => console.log("Client disconnected"));
+    socket.on("disconnect", () => {
+        console.log("Client disconnected")
+    });
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));

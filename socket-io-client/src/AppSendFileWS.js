@@ -3,6 +3,7 @@ import socketIOClient from "socket.io-client";
 import socketIOStream from "socket.io-stream";
 
 const endpoint = "http://127.0.0.1:4001";
+const socket = socketIOClient(endpoint);
 
 
 class AppSendFileWS extends Component {
@@ -18,7 +19,8 @@ class AppSendFileWS extends Component {
   b64(e){var t="";var n=new Uint8Array(e);var r=n.byteLength;for(var i=0;i<r;i++){t+=String.fromCharCode(n[i])}return window.btoa(t)}
 
   componentDidMount() {
-    const socket = socketIOClient(endpoint);
+    
+    
     socket.on("FromAPI", data => this.setState({ response: data }));
 
     let self = this;
@@ -80,7 +82,6 @@ class AppSendFileWS extends Component {
   }
 
   _handleChange = (event) => {
-    const socket = socketIOClient(endpoint);
     
     console.log(event.target.files)
 
@@ -88,7 +89,7 @@ class AppSendFileWS extends Component {
     let stream = socketIOStream.createStream();
  
     // upload a file to the server.
-    socketIOStream(socket).emit('profile-image', stream, {size: file.size, name: file.name});
+    socketIOStream(socket).emit('FromClient-image', stream, {size: file.size, name: file.name});
     let blobStream = socketIOStream.createBlobReadStream(file);
     let size = 0;
 
