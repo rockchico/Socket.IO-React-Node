@@ -47,10 +47,11 @@ const apiFileStream = async socket => {
     }
 };
 
+let imgNumber = 1;
 const apiFileStreamSend = async socket => {
     try {
         
-        var filename = 'Arvore.JPG';
+        var filename = 'img'+imgNumber+'.jpg';
         
         fs.readFile(filename, function(err, data){
             //socket.emit('imageConversionByClient', { image: true, buffer: data });
@@ -60,8 +61,11 @@ const apiFileStreamSend = async socket => {
             ss(socket).emit('FromAPI-image', stream, {name: filename, buffer: data.toString("base64")});
             fs.createReadStream(filename).pipe(stream);
         });
-       
-        
+
+        imgNumber++ 
+
+        if(imgNumber > 3) { imgNumber = 1}
+
 
     } catch (error) {
         console.error(`Error: ${error.code}`);
@@ -79,11 +83,14 @@ io.on("connection", socket => {
         clearInterval(interval);
     }
     
-    interval = setInterval(() => getApiAndEmit(socket), 1000);
+    interval = setInterval(() => {
+        getApiAndEmit(socket)
+        apiFileStreamSend(socket)
+    }, 1000);
 
     apiFileStream(socket)
 
-    apiFileStreamSend(socket)
+    
 
  
     socket.on("disconnect", () => console.log("Client disconnected"));
