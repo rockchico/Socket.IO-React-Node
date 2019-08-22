@@ -8,7 +8,7 @@ function WW_socketReceive() {
         //console.time('zabbix-worker')
         worker.addEventListener("message", event => {
             //console.timeEnd('zabbix-worker')
-            console.log(event.data)
+            //console.log(event.data)
 
             resolve(event.data);
         });
