@@ -64,6 +64,27 @@ const APIFileStreamSend = async socket => {
     }
 };
 
+const APIFileStreamSend_txt = async socket => {
+    try {
+        
+        var filename = 'teste.txt';
+        const stats = fs.statSync(filename);
+        //console.log(stats)
+
+        const fileSizeInBytes = stats.size;
+
+        var stream = ss.createStream();
+
+        ss(socket).emit('FromAPI-txt', stream, {name: filename, size: fileSizeInBytes});
+
+        // lê o arquivo e manda pelo stream
+        fs.createReadStream(filename).pipe(stream);
+
+    } catch (error) {
+        console.error(`Error: ${error.code}`);
+    }
+};
+
 
 
 
@@ -83,6 +104,8 @@ io.on("connection", socket => {
     APIFileStreamSend(socket)
 
     APIFileStreamReceive(socket)
+
+    APIFileStreamSend_txt(socket)
  
     socket.on("disconnect", () => {
         console.log("Client disconnected")
