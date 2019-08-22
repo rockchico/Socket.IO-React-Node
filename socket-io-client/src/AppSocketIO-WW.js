@@ -17,8 +17,13 @@ class App extends Component {
 
   componentDidMount() {
     
+    let self = this
     Functions.socketReceive().then(filedata => {
       console.log(filedata)
+
+      // recebe uma imagem via stream
+      let img = <img alt={"teste"} src={"data:image/png;base64,"+this.b64(filedata)}></img>
+      self.setState({ imageFromAPI: img })
     }).finally(() => {
       
       //console.log('fim socketReceive')
@@ -27,9 +32,7 @@ class App extends Component {
 
     
     
-    // recebe uma imagem via stream
-    //let img = <img alt={"teste"} src={"data:image/png;base64,"+this.b64(filedata)}></img>
-    //this.setState({ imageFromAPI: img })
+    
 
 
   }

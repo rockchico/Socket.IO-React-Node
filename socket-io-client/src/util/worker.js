@@ -3,7 +3,7 @@
 	O importScripts pre-carregar� (sincronamente) os scripts passados a ele e aceita uma lista de argumentos, como importScripts('a.js', 'b.js', 'c.js').
 */
 //importScripts('ww-functions.js');
-import * as workerFunctions from './workerFunctions';
+//import * as workerFunctions from './workerFunctions';
 import socketIOClient from "socket.io-client";
 import socketIOStream from "socket.io-stream";
 
