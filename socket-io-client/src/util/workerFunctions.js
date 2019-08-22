@@ -4,11 +4,11 @@ import socketIOStream from "socket.io-stream";
 const endpoint = "http://127.0.0.1:4001";
 const socket = socketIOClient(endpoint);
 
-export function soketReceive() {
+export function socketReceive() {
   
 }
 
 
-export function soketSend(file) {
+export function socketSend(file) {
 
 }

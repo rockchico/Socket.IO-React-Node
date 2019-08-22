@@ -20,7 +20,7 @@ export default function worker (self) {
       
     switch (event.data.command) {
 
-      case 'soketReceive': {
+      case 'socketReceive': {
         
 
         let filedata;
@@ -75,7 +75,7 @@ export default function worker (self) {
         break;
       }
 
-      case 'soketSend': {
+      case 'socketSend': {
         //console.log(event.data.file)
 
         let file = event.data.file;

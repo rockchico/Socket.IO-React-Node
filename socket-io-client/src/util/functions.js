@@ -20,7 +20,7 @@ function WW_socketReceive() {
 
         //start the worker
         worker.postMessage({
-            command: "soketReceive"
+            command: "socketReceive"
         });
     });
 }
@@ -40,7 +40,7 @@ function WW_socketSend(file) {
 
         //start the worker
         worker.postMessage({
-            command: "soketSend",
+            command: "socketSend",
             file: file
         });
     });
