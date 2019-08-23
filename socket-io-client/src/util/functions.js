@@ -8,7 +8,7 @@ function WW_socketReceive(fileType, streamName) {
         //console.time('zabbix-worker')
         worker.addEventListener("message", event => {
             //console.timeEnd('zabbix-worker')
-            //console.log(event.data)
+            //console.log(event)
 
             resolve(event.data);
         });

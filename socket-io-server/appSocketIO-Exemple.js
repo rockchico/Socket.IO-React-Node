@@ -40,7 +40,7 @@ const APIFileStreamReceive = async socket => {
 };
 
 let imgNumber = 1;
-const APIFileStreamSend = async socket => {
+const APIFileStreamSend_image = async socket => {
     try {
         
         var filename = 'img'+imgNumber+'.jpg';
@@ -101,11 +101,13 @@ io.on("connection", socket => {
         
     }, 1000);
 
-    APIFileStreamSend(socket)
+    
 
-    APIFileStreamReceive(socket)
+    //APIFileStreamReceive(socket)
 
     APIFileStreamSend_txt(socket)
+
+    APIFileStreamSend_image(socket)
  
     socket.on("disconnect", () => {
         console.log("Client disconnected")
