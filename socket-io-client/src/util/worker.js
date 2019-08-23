@@ -4,11 +4,11 @@
 */
 //importScripts('ww-functions.js');
 import * as workerFunctions from './workerFunctions';
-import socketIOClient from "socket.io-client";
-import socketIOStream from "socket.io-stream";
+//import socketIOClient from "socket.io-client";
+//import socketIOStream from "socket.io-stream";
 
-const endpoint = "http://127.0.0.1:4001";
-const socket = socketIOClient(endpoint);
+//const endpoint = "http://127.0.0.1:4001";
+//const socket = socketIOClient(endpoint);
 
 
 
@@ -20,8 +20,20 @@ export default function worker (self) {
       
     switch (event.data.command) {
 
+      case 'socketReceiveImage': {
+        workerFunctions.socketReceiveImage(self, event.data.streamName);
+        //self.close();
+        break;
+      }
+
+      case 'socketReceiveTxt': {
+        workerFunctions.socketReceiveTxt(self, event.data.streamName);
+        //self.close();
+        break;
+      }
+      
       case 'socketReceive': {
-        workerFunctions.socketReceive(self);
+        //workerFunctions.socketReceiveFile(self, event.data.stream);
         //self.close();
         break;
       }

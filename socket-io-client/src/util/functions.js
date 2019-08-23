@@ -2,7 +2,7 @@ import work from "webworkify-webpack";
 
 const worker = work(require.resolve("./worker.js"));
 
-function WW_socketReceive() {
+function WW_socketReceive(fileType, streamName) {
     return new Promise((resolve, reject) => {
         
         //console.time('zabbix-worker')
@@ -18,9 +18,26 @@ function WW_socketReceive() {
             reject(e);
         });
 
+        let command;
+
+        switch (fileType) {
+            case 'txt': {
+                command = 'socketReceiveTxt'
+                break;
+            }
+            case 'image': {
+                command = 'socketReceiveImage'
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+
         //start the worker
         worker.postMessage({
-            command: "socketReceive"
+            command: command,
+            streamName: streamName
         });
     });
 }
@@ -46,10 +63,10 @@ function WW_socketSend(file) {
     });
 }
 
-export async function socketReceive() {
+export async function socketReceive(fileType, streamName) {
 
     return new Promise((resolve, reject) => {
-        WW_socketReceive()
+        WW_socketReceive(fileType, streamName)
         .then(result => {
 
             //console.log(result) 

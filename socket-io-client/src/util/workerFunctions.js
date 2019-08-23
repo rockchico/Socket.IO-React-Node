@@ -4,18 +4,19 @@ import socketIOStream from "socket.io-stream";
 const endpoint = "http://127.0.0.1:4001";
 const socket = socketIOClient(endpoint);
 
-export function socketReceive(self) {
-  
+
+function b64(e){var t="";var n=new Uint8Array(e);var r=n.byteLength;for(var i=0;i<r;i++){t+=String.fromCharCode(n[i])}return btoa(t)}
+
+export function socketReceiveImage(self, streamName) {
+
     let filedata;
 
     // recebe uma imagem via stream
-    socketIOStream(socket).on('FromAPI-image', function(stream, data) {
+    socketIOStream(socket).on(streamName, function(stream, data) {
 
-        //console.log("opa");
         let fileLength = 0;
         let fileBuffer = [];
-        
-        
+            
         //console.log(data);
         //console.log(stream);
 
@@ -25,10 +26,8 @@ export function socketReceive(self) {
             let progress = Math.floor(fileLength / data.size * 100)
             fileBuffer.push(chunk);
 
-            //console.log(progress);
+            console.log('socketReceiveImage, streaam ('+streamName+'): '+progress);
         });
-
-        
 
         stream.on('end', function () {
 
@@ -47,16 +46,46 @@ export function socketReceive(self) {
             //console.log(filedata)
             //return filedata;
 
-            self.postMessage(filedata);
-            
-            
+            self.postMessage(b64(filedata));
+             
         });
 
     });
 
 
+}
 
+export function socketReceiveTxt(self, streamName) {
+  
+    // recebe uma imagem via stream
+    socketIOStream(socket).on(streamName, function(stream, data) {
 
+        //console.log("opa");
+        let fileLength = 0;
+        let fileBuffer = [];
+        
+        
+        //console.log(data);
+        //console.log(stream);
+
+        //== Receive data
+        stream.on('data', function (chunk) {
+            fileLength += chunk.length;
+            let progress = Math.floor(fileLength / data.size * 100)
+            fileBuffer.push(chunk);
+
+            console.log('socketReceiveTxt, streaam ('+streamName+'): '+progress);
+        });
+
+        
+
+        stream.on('end', function () {
+            
+            self.postMessage(fileBuffer);
+
+        });
+
+    });
 }
 
 
